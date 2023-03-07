@@ -1,4 +1,5 @@
-mport os.path
+#!/usr/bin/python3
+import os.path
 from datetime import datetime
 from fabric.api import env
 from fabric.api import local
