@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-compress web static package
+compress web static piackage
 """
 from fabric.api import *
 from datetime import datetime
