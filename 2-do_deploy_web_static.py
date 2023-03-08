@@ -1,5 +1,5 @@
-
-n that compress a folder """
+#!/usr/bin/python3
+""" Function that compress a folder """
 from datetime import datetime
 from fabric.api import *
 import shlex
