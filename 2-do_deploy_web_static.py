@@ -1,46 +1,39 @@
 #!/usr/bin/python3
-#fabric script that deploy a file it to servers
-""" Fabric script to deploy """
-import os
-from fabric.api import *
+""" Function that compress a folder """
 from datetime import datetime
+from fabric.api import *
+import shlex
+import os
+
 
 env.hosts = ['54.167.15.9', '204.236.203.218']
 env.user = "ubuntu"
-env.key_filename = "~/.ssh/holberton"
-env.warn_only = True
 
 
 def do_deploy(archive_path):
-    """ upload to web servers and deploy """
-    if not os.path.exists(archive_path) and not os.path.isfile(archive_path):
+    """ Deploys """
+    if not os.path.exists(archive_path):
         return False
     try:
-        # get file name without extension
-        filename = os.path.splitext(os.path.basename(archive_path))[0]
-        # upload to /tmp dir to server
-        put(local_path=archive_path, remote_path="/tmp")
-        # create destination directory
-        run("mkdir -p /data/web_static/releases/" + filename + "/")
-        # uncompress tar file to a directory
-        run("sudo tar -xzf /tmp/" + filename + ".tgz" +
-            " -C /data/web_static/releases/" + filename + "/")
-        # Delete file uploaded
-        run("rm /tmp/" + filename + ".tgz")
+        name = archive_path.replace('/', ' ')
+        name = shlex.split(name)
+        name = name[-1]
 
-        # move files to a previous folder
-        run("mv /data/web_static/releases/" + filename +
-            "/web_static/* /data/web_static/releases/" + filename + "/")
+        wname = name.replace('.', ' ')
+        wname = shlex.split(wname)
+        wname = wname[0]
 
-        # delete that folder
-        run("rm -rf /data/web_static/releases/" + filename +
-            "/web_static")
+        releases_path = "/data/web_static/releases/{}/".format(wname)
+        tmp_path = "/tmp/{}".format(name)
 
-        # delete symbolic link /data/web_static/current
+        put(archive_path, "/tmp/")
+        run("mkdir -p {}".format(releases_path))
+        run("tar -xzf {} -C {}".format(tmp_path, releases_path))
+        run("rm {}".format(tmp_path))
+        run("mv {}web_static/* {}".format(releases_path, releases_path))
+        run("rm -rf {}web_static".format(releases_path))
         run("rm -rf /data/web_static/current")
-        # create a new symbolic link
-        run("ln -s /data/web_static/releases/" + filename +
-            "/ /data/web_static/current")
+        run("ln -s {} /data/web_static/current".format(releases_path))
         print("New version deployed!")
         return True
     except:
