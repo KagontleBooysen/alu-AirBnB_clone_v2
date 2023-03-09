@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+<<<<<<< HEAD
 # Fabfile to distribute an archive to a web server.
 import os.path
 from fabric.api import env
@@ -6,6 +7,14 @@ from fabric.api import put
 from fabric.api import run
 
 env.hosts = ["54.167.15.9", "204.236.203.218"]
+=======
+"""Distributes an archive to your web servers, using the function do_deploy"""
+from fabric.contrib import files
+from fabric.api import env, put, run
+import os
+
+env.hosts = ['54.167.15.9', '204.236.203.218']
+>>>>>>> 821afce8c64df17ed4e1f2e8c67e4623b0e9303a
 
 
 def do_deploy(archive_path):
@@ -45,4 +54,8 @@ def do_deploy(archive_path):
     if run("ln -s /data/web_static/releases/{}/ /data/web_static/current".
            format(name)).failed is True:
         return False
+<<<<<<< HEAD
     return True
+=======
+
+>>>>>>> 821afce8c64df17ed4e1f2e8c67e4623b0e9303a
