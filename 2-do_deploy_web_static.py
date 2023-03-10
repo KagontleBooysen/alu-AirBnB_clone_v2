@@ -35,7 +35,11 @@ def do_deploy(archive_path):
         run("sudo rm {}".format(tmp_path))
         run("sudo mv {}web_static/* {}".format(releases_path, releases_path))
         run("sudo rm -rf {}web_static".format(releases_path))
+<<<<<<< HEAD
         run("sudo rm -rf /data/web_static/current")
+=======
+        run(" sudo rm -rf /data/web_static/current")
+>>>>>>> 655059447d13ab4ec1b0c727e34a6f744b0e71a5
         run("sudo ln -s {} /data/web_static/current".format(releases_path))
         print("New version deployed!")
         return True
