@@ -1,77 +1,43 @@
 #!/usr/bin/python3
-"""comment"""
-from fabric.api import *
-import os
-import re
+"""
+Fabric script that distributes an archive to your web servers
+"""
+
 from datetime import datetime
+from fabric.api import *
+import shlex
+import os
 
-env.user = 'ubuntu'
+
 env.hosts = ['54.167.15.9', '204.236.203.218']
-
-
-def do_pack():
-    """Comm"""
-    local("mkdir -p versions")
-    result = local("tar -cvzf versions/web_static_{}.tgz web_static"
-                   .format(datetime.strftime(datetime.now(), "%Y%m%d%H%M%S")),
-                   capture=True)
-    if result.failed:
-        return None
-    return result
+env.user = 'ubuntu'
 
 
 def do_deploy(archive_path):
-    """Comment"""
-    if not os.path.isfile(archive_path):
+    """ Deploys """
+    if not os.path.exists(archive_path):
         return False
+    try:
+        name = archive_path.replace('/', ' ')
+        name = shlex.split(name)
+        name = name[-1]
 
-    filename_regex = re.compile(r'[^/]+(?=\.tgz$)')
-    match = filename_regex.search(archive_path)
+        wname = name.replace('.', ' ')
+        wname = shlex.split(wname)
+        wname = wname[0]
 
-    # Upload the archive to the /tmp/ directory of the web server
-    archive_filename = match.group(0)
-    result = put(archive_path, "/tmp/{}.tgz".format(archive_filename))
-    if result.failed:
-        return False
-    # Uncompress the archive to the folder
-    #     /data/web_static/releases/<archive filename without extension> on
-    #     the web server
+        releases_path = "/data/web_static/releases/{}/".format(wname)
+        tmp_path = "/tmp/{}".format(name)
 
-    result = run(
-        "mkdir -p /data/web_static/releases/{}/".format(archive_filename))
-    if result.failed:
+        put(archive_path, "/tmp/")
+        run("mkdir -p {}".format(releases_path))
+        run("tar -xzf {} -C {}".format(tmp_path, releases_path))
+        run("rm {}".format(tmp_path))
+        run("mv {}web_static/* {}".format(releases_path, releases_path))
+        run("rm -rf {}web_static".format(releases_path))
+        run("rm -rf /data/web_static/current")
+        run("ln -s {} /data/web_static/current".format(releases_path))
+        print("New version deployed!")
+        return True
+    except:
         return False
-    result = run("tar -xzf /tmp/{}.tgz -C /data/web_static/releases/{}/"
-                 .format(archive_filename, archive_filename))
-    if result.failed:
-        return False
-
-    # Delete the archive from the web server
-    result = run("rm /tmp/{}.tgz".format(archive_filename))
-    if result.failed:
-        return False
-    result = run("mv /data/web_static/releases/{}"
-                 "/web_static/* /data/web_static/releases/{}/"
-                 .format(archive_filename, archive_filename))
-    if result.failed:
-        return False
-    result = run("rm -rf /data/web_static/releases/{}/web_static"
-                 .format(archive_filename))
-    if result.failed:
-        return False
-
-    # Delete the symbolic link /data/web_static/current from the web server
-    result = run("rm -rf /data/web_static/current")
-    if result.failed:
-        return False
-
-    #  Create a new the symbolic link
-    #  /data/web_static/current on the web server,
-    #     linked to the new version of your code
-    #     (/data/web_static/releases/<archive filename without extension>)
-    result = run("ln -s /data/web_static/releases/{}/ /data/web_static/current"
-                 .format(archive_filename))
-    if result.failed:
-        return False
-
-    return True
