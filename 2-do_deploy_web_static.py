@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+i!/usr/bin/python3
 """
 Fabric script that distributes an archive to your web servers
 """
@@ -9,7 +9,7 @@ import shlex
 import os
 
 
-env.hosts = ['54.167.15.9', '204.236.203.218']
+env.hosts = ['54.167.15.9', '54.90.243.170']
 env.user = 'ubuntu'
 
 
