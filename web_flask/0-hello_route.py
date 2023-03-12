@@ -1,36 +1,20 @@
 #!/usr/bin/python3
-
-"""the `0-hello_route` module
-starts a flask web application listening on `0.0.0.0:5000`
+"""starts a Flask web application
+- web application must be listening on 0.0.0.0, port 5000
+Routes:
+        - /: display “Hello HBNB!”
+-You must use the option strict_slashes=False in your route definition
 """
-
 from flask import Flask
 
-app = Flask(__name__)
-app.url_map.strict_slashes = False
 
-
-@app.route("/")
-def hello():
-    """returns `Hello HBNB!` message"""
-    return "Hello HBNB!"
-
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
-
-"""
-starts a Flask web application
-"""
-
-from flask import Flask
 app = Flask(__name__)
 
 
-@app.route('/', strict_slashes=False)
-def index():
-    """returns Hello HBNB!"""
-    return 'Hello HBNB!'
+@app.route("/", strict_slashes=False)
+def hello_hbnb():
+    return("Hello HBNB!")
+
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port='5000')
+    app.run(host="0.0.0.0", port=5000, debug=None)
