@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-<<<<<<< HEAD
 """the `0-hello_route` module
 starts a flask web application listening on `0.0.0.0:5000`
 """
