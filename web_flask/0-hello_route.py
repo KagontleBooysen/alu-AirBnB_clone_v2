@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-
 """the `0-hello_route` module
 starts a flask web application listening on `0.0.0.0:5000`
 """
@@ -24,6 +23,8 @@ starts a Flask web application
 """
 from flask import Flask
 app = Flask(__name__)
+
+
 @app.route('/', strict_slashes=False)
 def index():
     """returns Hello HBNB!"""
