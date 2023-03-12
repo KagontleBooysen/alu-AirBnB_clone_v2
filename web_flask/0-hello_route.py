@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+
 """the `0-hello_route` module
 starts a flask web application listening on `0.0.0.0:5000`
 """
@@ -17,7 +18,6 @@ def hello():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
-
 
 """
 starts a Flask web application
