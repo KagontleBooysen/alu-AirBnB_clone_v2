@@ -37,7 +37,8 @@ def do_deploy(archive_path):
         run("rm /tmp/{}".format(filename), timeout=10)
         run("cp -rf /data/web_static/releases/{}/web_static/* \
             /data/web_static/releases/{}/".format(name, name), timeout=10)
-        run("rm -rf /data/web_static/releases/{}/web_static".format(name), timeout=10)
+        run("rm -rf /data/web_static/releases/{}/web_static".format(name),
+        timeout=10)
         run("rm -rf /data/web_static/current", timeout=10)
         run("ln -s /data/web_static/releases/{}/ \
             /data/web_static/current".format(
