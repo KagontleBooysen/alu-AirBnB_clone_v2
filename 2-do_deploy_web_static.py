@@ -23,29 +23,24 @@ def do_pack():
 
 
 def do_deploy(archive_path):
-    """distributes an archive to a web servers"""
-
+    """Function for deploy"""
     if not os.path.exists(archive_path):
         return False
+
+    data_path = '/data/web_static/releases/'
+    tmp = archive_path.split('.')[0]
+    name = tmp.split('/')[1]
+    dest = data_path + name
+
     try:
-        put(archive_path, "/tmp/")
-        filename = archive_path.split("/")[-1]
-        name = filename.split(".")[0]
-        run("mkdir -p /data/web_static/releases/{}/".format(name), timeout=10)
-        run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/".format(
-            filename, name), timeout=10)
-        run("rm /tmp/{}".format(filename), timeout=10)
-        run("cp -rf /data/web_static/releases/{}/web_static/* \
-            /data/web_static/releases/{}/".format(name, name), timeout=10)
-        run("rm -rf /data/web_static/releases/{}/web_static".format(name),
-        timeout=10)
-        run("rm -rf /data/web_static/current", timeout=10)
-        run("ln -s /data/web_static/releases/{}/ \
-            /data/web_static/current".format(
-            name), timeout=10)
+        put(archive_path, '/tmp')
+        run('sudo mkdir -p {}'.format(dest))
+        run('sudo tar -xzf /tmp/{}.tgz -C {}'.format(name, dest))
+        run('sudo rm -f /tmp/{}.tgz'.format(name))
+        run('sudo mv {}/web_static/* {}/'.format(dest, dest))
+        run('sudo rm -rf {}/web_static'.format(dest))
+        run('sudo rm -rf /data/web_static/current')
+        run('sudo ln -s {} /data/web_static/current'.format(dest))
         return True
-    except FileNotFoundError:
-        return False
-    except Exception as e:
-        print(e)
+    except:
         return False
