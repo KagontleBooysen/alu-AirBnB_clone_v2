@@ -1,7 +1,15 @@
 #!/usr/bin/python3
-"""Starts a flask app
-    listens to 0.0.0.0:5000
-    
+"""
+starts a Flask web application:
+-Your web application must be listening on 0.0.0.0, port 5000
+-Routes:
+        /states_list: display a HTML page: (inside the tag BODY)
+          H1 tag: "States"
+          UL tag: with the list of all State objects present in DBStorage sorted by
+          name (A->Z) tip
+                LI tag: description of one State: <state.id>: <B><state.name></B>
+Import this 7-dump to have some data
+You must use the option strict_slashes=False in your route definition   
 """
 from models import storage
 from flask import Flask
