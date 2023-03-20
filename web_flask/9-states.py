@@ -1,6 +1,9 @@
 #!/usr/bin/python3
-"""
-starts a Flask web application
+"""Starts a Flask web application.
+The application listens on 0.0.0.0, port 5000.
+Routes:
+    /states: HTML page with a list of all State objects.
+    /states/<id>: HTML page displaying the given state with <id>.
 """
 from models import storage
 from flask import Flask
@@ -9,11 +12,13 @@ from flask import render_template
 app = Flask(__name__)
 
 
-@app.route("/cities_by_states", strict_slashes=False)
-def citystates():
-    ''' Display page with list of all states and related cities '''
+@app.route("/states", strict_slashes=False)
+def states():
+    """Displays an HTML page with a list of all States.
+    States are sorted by name.
+    """
     states = storage.all("State")
-    return render_template("9-states.html", states=states)
+    return render_template("9-states.html", state=states)
 
 
 @app.route("/states/<id>", strict_slashes=False)
@@ -27,9 +32,9 @@ def states_id(id):
 
 @app.teardown_appcontext
 def teardown(exc):
-    ''' reset the session of db storage '''
+    """Remove the current SQLAlchemy session."""
     storage.close()
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port='5000')
+    app.run(host="0.0.0.0")
