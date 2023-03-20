@@ -1,32 +1,26 @@
 #!/usr/bin/python3
 """
-Script that starts a Flask web application
+starts a Flask web application on 0.0.0.0:5000
 """
-from flask import Flask, render_template
 from models import storage
-from models.state import State
-
+from flask import Flask
+from flask import render_template
 
 app = Flask(__name__)
 
 
-@app.teardown_appcontext
-def handle_teardow(self):
-    """
-    Después de cada solicitud, debe eliminar
-    la sesión actual de SQLAlchemy
-    """
-    storage.close()
-
-
-@app.route('/states_list', strict_slashes=False)
-def list_of_state():
-    """
-    Función llamada con la ruta /states_list
-    """
-    states = storage.all(State).values()
+@app.route("/states_list", strict_slashes=False)
+def states_list():
+    ''' create template page where states are listed by name '''
+    states = storage.all("State")
     return render_template("7-states_list.html", states=states)
 
 
+@app.teardown_appcontext
+def teardown(exc):
+    """Remove the current SQLAlchemy session."""
+    storage.close()
+
+
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host="0.0.0.0", port='5000')
