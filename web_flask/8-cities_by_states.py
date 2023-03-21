@@ -19,7 +19,7 @@ starts a Flask web application:
 -You must use the option strict_slashes=False in your route definition
 """
 
-from models import storage
+from models import storage, State
 from flask import Flask, render_template
 
 app = Flask(__name__)
@@ -80,16 +80,14 @@ def states_list():
 
 @app.route('/cities_by_states', strict_slashes=False)
 def cities_by_states():
-    """displays a HTML page of city objects
-    in a nested list of state objects present in DBstorage
-    message on page changes depending on value passed"""
-    return render_template(
-        '8-cities_by_state.html', states=storage.all("State"))
+    states = storage.all(State).values()
+    states_sorted = sorted(states, key=lambda s: s.name)
+    return render_template('states.html', states=states_sorted)
 
 
 @app.teardown_appcontext
-def teardown(err):
+def close_db(error):
     storage.close()
 
 if __name__ == "__main__":
- app.run(host="0.0.0.0", port="5000")
+  app.run(host='0.0.0.0', port=5000)
