@@ -1,9 +1,14 @@
 #!/usr/bin/python3
-"""Starts a Flask web application:
-The application listens on 0.0.0.0, port 5000.
-Routes:
-    /states: HTML page with a list of all State objects.
-    /states/<id>: HTML page displaying the given state with <id>.
+"""
+-Your web application must be listening on 0.0.0.0, port 5000
+-Routes:
+        /cities_by_states: display a HTML page: (inside the tag BODY)
+         -H1 tag: “States”
+         -UL tag: with the list of all State objects present in DBStorage sorted by name (A->Z) tip
+         -LI tag: description of one State: <state.id>: <B><state.name></B> + UL tag: with the list of City objects linked to the State sorted by name (A->Z)
+        -LI tag: description of one City: <city.id>: <B><city.name></B>
+-Import this 7-dump to have some data
+-You must use the option strict_slashes=False in your route definition
 """
 from models import storage
 from flask import Flask
