@@ -10,36 +10,48 @@
 -Import this 7-dump to have some data
 -You must use the option strict_slashes=False in your route definition
 """
-from models import storage
-from flask import Flask
-from flask import render_template
 
+# Import necessary modules
+from flask import Flask, render_template
+from models import storage
+
+# Create Flask app
 app = Flask(__name__)
 
-
-@app.route("/states", strict_slashes=False)
-def states():
-    """Displays an HTML page with a list of all States.
-    States are sorted by name.
-    """
-    states = storage.all("State")
-    return render_template("9-states.html", state=states)
-
-
-@app.route("/states/<id>", strict_slashes=False)
-def states_id(id):
-    """Displays an HTML page with info about <id>, if it exists."""
-    for state in storage.all("State").values():
-        if state.id == id:
-            return render_template("9-states.html", state=state)
-    return render_template("9-states.html")
-
-
+# Declare method to close SQLAlchemy session after each request
 @app.teardown_appcontext
-def teardown(exc):
-    """Remove the current SQLAlchemy session."""
+def teardown_db(exception):
     storage.close()
 
+# Define /states route
+@app.route('/states', strict_slashes=False)
+def list_states():
+    # Fetch all State objects from storage
+    states = storage.all("State").values()
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    # Sort states by name
+    states = sorted(states, key=lambda x: x.name)
+
+    # Render HTML template with list of states
+    return render_template('states.html', states=states)
+
+# Define /states/<id> route
+@app.route('/states/<id>', strict_slashes=False)
+def show_state(id):
+    # Fetch State object with given ID from storage
+    state = storage.get("State", id)
+
+    # If state is found, fetch associated cities and sort by name
+    if state:
+        cities = sorted(state.cities, key=lambda x: x.name)
+
+        # Render HTML template with state and cities information
+        return render_template('state.html', state=state, cities=cities)
+    else:
+        # If state is not found, render HTML template with "Not found!" message
+        return render_template('not_found.html')
+
+# Run app on port 5000
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+
