@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """
+-starts a Flask web application:
 -Your web application must be listening on 0.0.0.0, port 5000
 -You must use storage for fetching data from the storage engine (FileStorage or DBStorage) => from models import storage and storage.all(...)
 -After each request you must remove the current SQLAlchemy Session:
