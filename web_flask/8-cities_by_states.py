@@ -1,7 +1,4 @@
 #!/usr/bin/python3
-"""Start web application with two routings
-"""
-
 from flask import Flask
 from models import storage, State
 from flask import render_template
