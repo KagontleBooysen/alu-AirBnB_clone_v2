@@ -1,6 +1,8 @@
 #!/usr/bin/python3
-
-"""Script that starts a Flask web application"""
+""" A script that starts a Flask web application and do some dummy stuff
+Returns:
+    _type_: _description_
+"""
 
 from flask import Flask, render_template
 from models import storage
