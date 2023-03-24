@@ -11,7 +11,8 @@ from models.state import State
 from models.city import City
 from models.user import User
 from models.base_model import Base
-
+from os import getenv
+if getenv('HBNB_TYPE_STORAGE') == 'db':
 
 class DBStorage:
 
