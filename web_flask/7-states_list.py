@@ -3,14 +3,6 @@
 Returns:
     _type_: _description_
 """
-from flask import Flask
-from flask import render_template
-from models import storage
-from models.state import State
-
-app = Flask(__name__)
-
-
 from models import storage
 from flask import Flask
 from flask import render_template
