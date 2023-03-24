@@ -1,20 +1,11 @@
 #!/usr/bin/python3
-"""
-Write a script that starts a Flask web application: Your web application must
-be listening on 0.0.0.0,
-port 5000.
-You must use storage for fetching data from the storage engine (FileStorage or
-DBStorage) => from models
-import storage and storage.all(...)
-After each request you must remove the current SQLAlchemy Session:
-    - Declare a method to handle @app.teardown_appcontext
-    - Call in this method storage.close()
-strict_slashes=False in your route definition
+""" A flask server to return id and name of a State object
+Returns:
+    _type_: _description_
 """
 
+
 from flask import Flask, render_template
-from models import storage
-from models.state import State
 
 app = Flask(__name__)
 
