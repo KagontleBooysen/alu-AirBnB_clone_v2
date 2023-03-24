@@ -1,34 +1,35 @@
 #!/usr/bin/python3
 """ State Module for HBNB project """
 from models.base_model import BaseModel, Base
-# import sqlalchemy modules
+from models import storage_type
+from models.city import City
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.orderinglist import ordering_list
+from os import getenv
+
+storage = getenv("HBNB_TYPE_STORAGE")
 
 
 class State(BaseModel, Base):
-
-    """This is the class for State
-    Attributes:
-        name: input name
-    """
+    """ State class """
     __tablename__ = "states"
-    # write a code to make BaseModel column order first in the table
+    if storage == 'db':
+        name = Column(String(128), nullable=False)
+        cities = relationship('City', backref='state',
+                              cascade='all, delete, delete-orphan')
+    else:
+        name = ''
 
-    name = Column(String(128), nullable=False)
-    cities = relationship("City", cascade='all, delete, delete-orphan',
-                          backref="state")
-    # write a code to make BaseModel column order first in the table
-
-    @property
-    def cities(self):
-        """getter attribute cities that returns the list of City objects
-        from storage linked to the current State"""
-        from models import storage
-        from models.city import City
-        cities = []
-        for key, value in storage.all(City).items():
-            if value.state_id == self.id:
-                cities.append(value)
-        return cities
+        @property
+        def cities(self):
+            '''returns the list of City instances with state_id
+                equals the current State.id
+                FileStorage relationship between State and City
+            '''
+            from models import storage
+            related_cities = []
+            cities = storage.all(City)
+            for city in cities.values():
+                if city.state_id == self.id:
+                    related_cities.append(city)
+            return related_cities
