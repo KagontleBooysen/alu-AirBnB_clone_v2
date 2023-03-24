@@ -7,6 +7,7 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 
+
 @app.route('/states', strict_slashes=False)
 def states():
     """ Displays a HTML page with a list of states """
@@ -44,5 +45,3 @@ def close_session(exception):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
-
-
